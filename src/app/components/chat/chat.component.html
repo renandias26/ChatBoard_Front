@@ -1,0 +1,82 @@
+<!-- chat.component.html -->
+<mat-sidenav-container class="chat-container">
+    <!-- Sidebar with contacts -->
+    <mat-sidenav mode="side" opened class="sidebar">
+        <mat-toolbar color="primary">
+            <span>Contacts</span>
+        </mat-toolbar>
+
+        <mat-list>
+            @for (user of chatService.activeUsers(); track user) {
+            <mat-list-item>
+                <img matListAvatar src="https://via.placeholder.com/40" alt="User avatar">
+                <div mat-line>{{user}}</div>
+                <div mat-line class="user-status">Online</div>
+                <mat-icon class="online-indicator">fiber_manual_record</mat-icon>
+            </mat-list-item>
+            } @empty {
+            <mat-list-item>
+                <div mat-line>No users online</div>
+            </mat-list-item>
+            }
+            <mat-list-item>
+                <div mat-line>No users online</div>
+            </mat-list-item>
+        </mat-list>
+
+        <mat-toolbar>
+            <span>Chat Rooms</span>
+        </mat-toolbar>
+
+        <mat-list>
+            @for (room of chatRooms(); track room) {
+            <mat-list-item [class.selected]="selectedRoom() === room" (click)="selectedRoom.set(room)">
+                <mat-icon matListIcon>forum</mat-icon>
+                <div mat-line>{{room}}</div>
+            </mat-list-item>
+            }
+        </mat-list>
+    </mat-sidenav>
+
+    <!-- Main chat area -->
+    <mat-sidenav-content class="main-content">
+        <!-- Chat header -->
+        <mat-toolbar color="primary" class="chat-header">
+            <span>{{selectedRoom()}}</span>
+            <button mat-icon-button (click)="clearChat()">
+                <mat-icon>delete_sweep</mat-icon>
+            </button>
+        </mat-toolbar>
+
+        <!-- Messages area -->
+        <div class="messages-container">
+            @if (hasMessages()) {
+            @for (msg of chatService.messages(); track msg) {
+            <div [class.message-sent]="msg.user === currentUser()"
+                [class.message-received]="msg.user !== currentUser()">
+                <div class="message-bubble">
+                    <div class="message-user">{{msg.user}}</div>
+                    <div class="message-text">{{msg.message}}</div>
+                    <div class="message-time">{{msg.messageTime}}</div>
+                </div>
+            </div>
+            }
+            } @else {
+            <div class="no-messages">
+                No messages yet. Start a conversation!
+            </div>
+            }
+        </div>
+
+        <!-- Message input -->
+        <div class="input-container">
+            <mat-form-field appearance="outline" class="message-input">
+                <input class="white-text" matInput [ngModel]="newMessage()" (ngModelChange)="newMessage.set($event)"
+                    placeholder="Type a message..." (keyup.enter)="sendMessage()">
+            </mat-form-field>
+            <button mat-fab color="primary" (click)="sendMessage()">
+                <mat-icon>send</mat-icon>
+            </button>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>
