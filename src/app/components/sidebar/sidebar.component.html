@@ -1,0 +1,41 @@
+<mat-sidenav-container class="chat-container">
+    <mat-sidenav mode="side" opened class="sidebar">
+        <mat-toolbar color="primary">
+            <span>Contacts</span>
+        </mat-toolbar>
+
+        <mat-list>
+            @for (user of chatService.activeUsers(); track user) {
+            <mat-list-item>
+                <img matListAvatar src="https://via.placeholder.com/40" alt="User avatar">
+                <div mat-line>{{user}}</div>
+                <div mat-line class="user-status">Online</div>
+                <mat-icon class="online-indicator">fiber_manual_record</mat-icon>
+            </mat-list-item>
+            } @empty {
+            <mat-list-item>
+                <div mat-line>No users online</div>
+            </mat-list-item>
+            }
+        </mat-list>
+
+        <mat-toolbar>
+            <span>Chat Rooms</span>
+        </mat-toolbar>
+
+        <mat-list>
+            @for (room of chatRooms(); track room) {
+            <mat-list-item [class.selected]="selectedRoom() === room" (click)="selectedRoom.set(room)">
+                <div class="sidebar-list-item">
+                    <div mat-line>{{room}}</div>
+                    <mat-icon matListIcon>forum</mat-icon>
+                </div>
+            </mat-list-item>
+            }
+        </mat-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <ng-content></ng-content>
+    </mat-sidenav-content>
+</mat-sidenav-container>

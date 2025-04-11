@@ -1,0 +1,30 @@
+.chat-container {
+    height: 100vh;
+    // background-color: var(--chat-bg);
+    // color: var(--text-color);
+}
+
+.sidebar {
+    width: 280px;
+    // background-color: var(--sidebar-bg);
+    border-right: var(--chat-border-width) var(--chat-border-style) var(--chat-border-color);
+}
+
+.online-indicator {
+    color: #4CAF50;
+    font-size: 12px;
+}
+
+mat-toolbar {
+    background-color: var(--chat-bg);
+}
+
+mat-sidenav {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.sidebar-list-item {
+    display: flex;
+    justify-content: space-between;
+}
