@@ -2,8 +2,6 @@
 import { Component, signal, computed, inject, linkedSignal, OnInit, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -17,12 +15,10 @@ import { ChatService } from '../../services/chat.service';
   imports: [
     CommonModule,
     FormsModule,
-    MatSidenavModule,
-    MatListModule,
-    MatIconModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
+    MatIconModule,
     MatToolbarModule
   ],
   templateUrl: './chat.component.html',
@@ -41,7 +37,7 @@ export class ChatComponent implements OnInit {
   hasMessages = computed(() => this.chatService.messages().length > 0);
 
   async ngOnInit(): Promise<void> {
-    if (!isPlatformBrowser(this.platformId)){
+    if (!isPlatformBrowser(this.platformId)) {
       return;
     }
     await this.chatService.start();
