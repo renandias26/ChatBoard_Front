@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ChatService } from '../../services/chat.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -27,20 +28,30 @@ import { ChatService } from '../../services/chat.service';
 export class ChatComponent implements OnInit {
   chatService = inject(ChatService);
   platformId = inject(PLATFORM_ID);
+  ActivatedRoute = inject(ActivatedRoute);
+  router = inject(Router);
 
   newMessage = signal('');
-  currentUser = signal('You');
+  currentUser = signal('');
 
   chatRooms = signal(['General', 'Support', 'Off-Topic']);
   selectedRoom = linkedSignal(() => this.chatRooms()[0]);
 
   hasMessages = computed(() => this.chatService.messages().length > 0);
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    await this.chatService.start();
+    
+    const userName = localStorage.getItem('username');
+    if(!userName) { this.router.navigate(['']); return;}
+    this.currentUser.set(userName);
+
+    this.ActivatedRoute.url.subscribe(async (segments) => {
+      const roomName = segments[segments.length - 1].path;
+      await this.chatService.start(this.currentUser(), roomName);
+    });
   }
 
   sendMessage(): void {

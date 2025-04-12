@@ -28,14 +28,14 @@ export class ChatService {
     });
   }
 
-  public async start() {
+  public async start(userName: string, roomName: string) {
     try {
       await this.hubConnection.start();
       this.listenEvents();
-      await this.hubConnection.invoke("JoinSpecificChat", {username: "You", chatRoom: "General"});
+      await this.hubConnection.invoke("JoinSpecificChat", {username: userName, chatRoom: roomName});
     } catch (error) {
       console.error("Error during connection startup:", error);
-      setTimeout(() => this.start(), 5000);
+      setTimeout(() => this.start(userName, roomName), 5000);
     }
   }
 

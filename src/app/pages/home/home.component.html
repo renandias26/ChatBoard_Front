@@ -1,0 +1,30 @@
+<div class="share-container">
+    <h1 class="app-title">CHATHUB</h1>
+    <h2 class="app-subtitle">A maneira mais simples de compartilhar conteúdo online</h2>
+
+    <div class="input-field">
+        <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Nome do Usuário</mat-label>
+            <input matInput [formControl]="userNameControl" placeholder="João">
+            @if (userNameControl.invalid) {
+            <mat-error>
+                Campo obrigatório
+            </mat-error>
+            }
+        </mat-form-field>
+    </div>
+    <div class="input-field">
+        <mat-form-field appearance="outline" floatLabel="always">
+            <mat-label>Nome da Sala</mat-label>
+            <input matInput [formControl]="roomControl" placeholder="Turma 2">
+            @if (roomControl.invalid) {
+            <mat-error>
+                Campo obrigatório
+            </mat-error>
+            }
+        </mat-form-field>
+    </div>
+    <button mat-fab color="primary" (click)="goToRoom()">Entrar</button>
+
+    <p class="no-login">Não é necessário login</p>
+</div>
