@@ -43,9 +43,9 @@ export class ChatComponent implements OnInit {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
-    
+
     const userName = localStorage.getItem('username');
-    if(!userName) { this.router.navigate(['']); return;}
+    if (!userName) { this.router.navigate(['']); return; }
     this.currentUser.set(userName);
 
     this.ActivatedRoute.url.subscribe(async (segments) => {
