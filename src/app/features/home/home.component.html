@@ -5,7 +5,7 @@
     <div class="input-field">
         <mat-form-field appearance="outline" floatLabel="always">
             <mat-label>Nome do Usuário</mat-label>
-            <input matInput [formControl]="userNameControl" placeholder="João">
+            <input matInput [formControl]="userNameControl" placeholder="Ex. João" class="placeholderColor">
             @if (userNameControl.invalid) {
             <mat-error>
                 Campo obrigatório
@@ -16,7 +16,7 @@
     <div class="input-field">
         <mat-form-field appearance="outline" floatLabel="always">
             <mat-label>Nome da Sala</mat-label>
-            <input matInput [formControl]="roomControl" placeholder="Turma 2">
+            <input matInput [formControl]="roomControl" placeholder="Ex. Turma 2" class="placeholderColor">
             @if (roomControl.invalid) {
             <mat-error>
                 Campo obrigatório

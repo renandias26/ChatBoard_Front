@@ -29,6 +29,11 @@
     margin-bottom: 20px;
   }
 
+  .placeholderColor::placeholder {
+    color: #666 !important;
+  }
+
+
   .domain-part {
     font-size: 1rem;
     padding: 0 5px;
