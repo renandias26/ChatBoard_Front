@@ -1,21 +1,30 @@
 <div class="main-content">
     <!-- Chat header -->
     <mat-toolbar color="primary" class="chat-header">
-        <span>{{selectedRoom()}}</span>
-        <button mat-icon-button title="Clear chat" (click)="clearChat()">
-            <mat-icon>delete_sweep</mat-icon>
-        </button>
+        <span class="app-name">ChatHub</span>
+
+        <span class="rommName">{{selectedRoom()}}</span>
+
+        <div class="chat-header-actions">
+            <button mat-icon-button title="Clear chat" (click)="clearChat()" class="icon-button-with-bg bg-clear">
+                <mat-icon>delete_sweep</mat-icon>
+            </button>
+            <button mat-icon-button (click)="leaveRoom()" title="Sair da Sala" class="leaveRoom icon-button-with-bg bg-exit">
+                <mat-icon>logout</mat-icon>
+            </button>
+        </div>
     </mat-toolbar>
 
     <!-- Messages area -->
     <div class="messages-container">
         @if (hasMessages()) {
         @for (msg of chatService.messages(); track msg) {
-        <div [class.message-sent]="msg.user === currentUser()" [class.message-received]="msg.user !== currentUser()">
+        <div [class.message-sent]="msg.userName === currentUser()"
+            [class.message-received]="msg.userName !== currentUser()">
             <div class="message-bubble">
-                <div class="message-user">{{msg.user}}</div>
-                <div class="message-text">{{msg.message}}</div>
-                <div class="message-time">{{msg.messageTime}}</div>
+                <div class="message-user">{{msg.userName}}</div>
+                <div class="message-text">{{msg.content}}</div>
+                <!-- <div class="message-time">{{msg.DateTime | date:'dd/MM/yyyy'}}</div> -->
             </div>
         </div>
         }
@@ -28,7 +37,7 @@
 
     <!-- Message input -->
     <div class="input-container">
-        <mat-form-field appearance="outline" class="message-input" subscriptSizing="dynamic" >
+        <mat-form-field appearance="outline" class="message-input" subscriptSizing="dynamic">
             <input class="white-text" matInput [ngModel]="newMessage()" (ngModelChange)="newMessage.set($event)"
                 placeholder="Type a message..." (keyup.enter)="sendMessage()">
         </mat-form-field>

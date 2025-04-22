@@ -1,5 +1,5 @@
 // chat.component.ts
-import { Component, signal, computed, inject, linkedSignal, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, signal, computed, inject, linkedSignal, OnInit, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,7 +25,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
   chatService = inject(ChatService);
   platformId = inject(PLATFORM_ID);
   ActivatedRoute = inject(ActivatedRoute);
@@ -34,24 +34,37 @@ export class ChatComponent implements OnInit {
   newMessage = signal('');
   currentUser = signal('');
 
-  chatRooms = signal(['General', 'Support', 'Off-Topic']);
-  selectedRoom = linkedSignal(() => this.chatRooms()[0]);
+  // chatRooms = signal(['General', 'Support', 'Off-Topic']);
+  // selectedRoom = linkedSignal(() => this.chatRooms()[0]);
+  selectedRoom = signal('');
 
   hasMessages = computed(() => this.chatService.messages().length > 0);
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
 
     const userName = localStorage.getItem('username');
-    if (!userName) { this.router.navigate(['']); return; }
+    if (!userName) {
+      this.router.navigate(['']);
+      return;
+    }
     this.currentUser.set(userName);
 
-    this.ActivatedRoute.url.subscribe(async (segments) => {
-      const roomName = segments[segments.length - 1].path;
-      await this.chatService.start(this.currentUser(), roomName);
-    });
+    const curretnURL = this.ActivatedRoute.snapshot.url
+    const roomName = curretnURL[curretnURL.length - 1].path;
+    this.selectedRoom.set(roomName);
+
+    await this.chatService.start(this.currentUser(), this.selectedRoom());
+  }
+
+  ngOnDestroy(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    this.leaveRoom();
   }
 
   sendMessage(): void {
@@ -63,8 +76,15 @@ export class ChatComponent implements OnInit {
   }
 
   clearChat(): void {
-    this.chatService.messages.set([]);
+    this.chatService.clearMessages();
   }
 
-
+  leaveRoom(): void {
+    try {
+      this.chatService.disconnect();
+      this.router.navigate(['']);
+    } catch (error) {
+      console.error('Error during disconnection:', error);
+    }
+  }
 }
