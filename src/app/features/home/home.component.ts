@@ -1,8 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -14,11 +15,21 @@ import { Router } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+
   userNameControl = new FormControl('', [Validators.required]);
   roomControl = new FormControl('', [Validators.required]);
+  ActivatedRoute = inject(ActivatedRoute);
   router = inject(Router);
+  platformId = inject(PLATFORM_ID);
 
+  ngOnInit(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    this.userNameControl.setValue(localStorage.getItem('username') ?? '');
+  }
 
   goToRoom() {
     if (this.roomControl.invalid || this.userNameControl.invalid) {
